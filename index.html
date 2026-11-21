@@ -1,860 +1,267 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en" dir="ltr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>U1V1 Digital Hub</title>
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1220">
+<title>Image to Text & Translate</title>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js"></script>
 <style>
-:root{
-    --primary:#0f766e;
-    --secondary:#14b8a6;
-    --accent:#f59e0b;
-    --bg:#f4f7fb;
-    --card:#ffffff;
-    --text:#1f2937;
-    --text-light:#6b7280;
-    --shadow:0 10px 25px rgba(0,0,0,.10);
-}
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
-body{
-    font-family:'Segoe UI',sans-serif;
-    background:var(--bg);
-    color:var(--text);
-}
-
-
-
-.hero h1{
-    font-size:3rem;
-    margin-bottom:10px;
-}
-
-.hero p{
-    font-size:1.1rem;
-    opacity:.95;
-}
-
-.container{
-    max-width:1400px;
-    margin:auto;
-    padding:30px 20px;
-}
-
-.search-box{
-    margin-bottom:25px;
-}
-
-.search-box input{
-    width:100%;
-    padding:16px;
-    border-radius:12px;
-    border:1px solid #d9dce1;
-    font-size:16px;
-}
-
-.stats{
-    text-align:center;
-    margin-bottom:25px;
-    font-size:18px;
-    font-weight:600;
-    color:var(--primary);
-}
-
-.grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
-    gap:22px;
-}
-
-.card{
-    background:var(--card);
-    border-radius:18px;
-    padding:24px;
-    box-shadow:var(--shadow);
-    transition:.3s;
-    border-top:5px solid var(--primary);
-}
-
-@media (max-width:768px){
-
-    .grid{
-        grid-template-columns:1fr;
-    }
-
-    .card{
-        padding:15px;
-    }
-
-    .card-icon{
-        width:50px;
-        height:50px;
-        font-size:24px;
-    }
-
-    .btn{
-        display:block;
-        width:100%;
-        text-align:center;
-    }
-
-    .logo{
-        width:60px;
-    }
-}
-
-.card:hover{
-    transform:translateY(-6px);
-}
-
-.card h3{
-    color:var(--primary);
-    margin-bottom:12px;
-    font-size:1.2rem;
-}
-
-.card p{
-    color:var(--text-light);
-    line-height:1.6;
-    min-height:80px;
-}
-
-.btn{
-    display:inline-block;
-    margin-top:15px;
-    padding:11px 20px;
-    background:var(--primary);
-    color:white;
-    text-decoration:none;
-    border-radius:10px;
-    font-weight:600;
-}
-
-.btn:hover{
-    background:#0d9488;
-}
-
-footer{
-    text-align:center;
-    margin-top:40px;
-    padding:25px;
-    color:#666;
-}
-
-.tag{
-    display:inline-block;
-    background:#ecfdf5;
-    color:#047857;
-    padding:4px 10px;
-    border-radius:20px;
-    font-size:12px;
-    margin-bottom:10px;
-}
-{font-family:Segoe UI,sans-serif;margin:0;background:#f4f7fb}.hero{background:linear-gradient(135deg,#0f766e,#14b8a6);color:#fff;padding:20px}.brand-header{display:flex;align-items:center;justify-content:center;gap:16px}.logo{width:80px}.brand-text h1{margin:0}.container{padding:20px}.filters{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}.filter-btn{padding:8px 12px;border:none;border-radius:20px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:20px}.card{background:#fff;padding:16px;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.1)}.btn{display:block;background:#0f766e;color:#fff;text-decoration:none;padding:10px;border-radius:8px;text-align:center}.search-box input{width:100%;padding:12px;margin-top:15px}.dark{background:#0d1117;color:#fff}@media(max-width:768px){.brand-header{gap:12px}.logo{width:60px}.brand-text h1{font-size:1.6rem}}
-
-/* Islamic Banner */
-
-.islamic-banner{
-    position:relative;
-    overflow:hidden;
-
-    background:
-        linear-gradient(
-            135deg,
-            #0b5d50,
-            #0f766e,
-            #14b8a6
-        );
-
-    text-align:center;
-
-    padding:12px 20px;
-
-    color:#fff;
-
-    box-shadow:
-        0 4px 15px rgba(0,0,0,.15);
-}
-
-/* Animated shimmer */
-
-.islamic-banner::before{
-    content:"";
-
-    position:absolute;
-
-    top:0;
-    left:-150%;
-
-    width:70%;
-    height:100%;
-
-    background:
-        linear-gradient(
-            90deg,
-            transparent,
-            rgba(255,255,255,.45),
-            transparent
-        );
-
-    animation:
-        shimmering 5s infinite linear;
-}
-
-@keyframes shimmering{
-
-    0%{
-        left:-150%;
-    }
-
-    100%{
-        left:150%;
-    }
-}
-
-.arabic-calligraphy{
-
-    position:relative;
-
-    font-size:2rem;
-    font-weight:700;
-
-    line-height:1.7;
-
-    direction:rtl;
-
-    color:#fff9d9;
-
-    text-shadow:
-        0 0 5px #fff,
-        0 0 10px #ffe082,
-        0 0 15px #ffd54f,
-        0 0 30px #ffca28;
-
-    animation:
-        glowing 3s ease-in-out infinite;
-}
-
-/* Sparkling glow */
-
-@keyframes glowing{
-
-    0%{
-        text-shadow:
-        0 0 5px #fff,
-        0 0 10px #ffe082,
-        0 0 15px #ffd54f;
-    }
-
-    50%{
-        text-shadow:
-        0 0 8px #fff,
-        0 0 20px #fff59d,
-        0 0 35px #ffd54f,
-        0 0 50px #ffca28;
-    }
-
-    100%{
-        text-shadow:
-        0 0 5px #fff,
-        0 0 10px #ffe082,
-        0 0 15px #ffd54f;
-    }
-}
-
-.translation{
-
-    text-align:center;
-
-    margin-top:4px;
-
-    font-size:.75rem;
-
-    letter-spacing:.4px;
-
-    opacity:.92;
-
-    color:#198e21;
-
-}
-
-/* Floating sparkles */
-
-.islamic-banner::after{
-
-    content:"✦ ✧ ✦ ✧ ✦";
-
-    position:absolute;
-
-    top:50%;
-    left:0;
-
-    width:100%;
-
-    transform:translateY(-50%);
-
-    color:rgba(255,255,255,.4);
-
-    font-size:18px;
-
-    animation:
-        sparkle 8s linear infinite;
-
-    pointer-events:none;
-}
-
-@keyframes sparkle{
-
-    0%{
-        transform:
-            translateX(-20%)
-            translateY(-50%);
-    }
-
-    100%{
-        transform:
-            translateX(20%)
-            translateY(-50%);
-    }
-}
-
-@media (max-width:768px){
-
-    .islamic-banner{
-        padding:10px;
-    }
-
-    .arabic-calligraphy{
-        font-size:1.15rem;
-        line-height:1.6;
-    }
-
-    .translation{
-        font-size:.62rem;
-        text-align:center;
-    }
-}
-.arabic-calligraphy{
-    background:
-        linear-gradient(
-            90deg,
-            #fff7b2,
-            #ffd700,
-            #fff7b2
-        );
-
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-}
-.islamic-banner{
-    position:relative;
-    overflow:hidden;
-
-    height:34px;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    background:
-        linear-gradient(
-            90deg,
-            #0b5d50,
-            #0f766e,
-            #14b8a6
-        );
-
-    border-bottom:
-        1px solid rgba(255,255,255,.15);
-}
-
-/* Shining sweep */
-.islamic-banner::before{
-    content:"";
-    position:absolute;
-    inset:0;
-
-    background:
-        linear-gradient(
-            120deg,
-            transparent,
-            rgba(255,255,255,.15),
-            transparent
-        );
-
-    transform:translateX(-100%);
-    animation:shine 8s linear infinite;
-}
-
-@keyframes shine{
-    to{
-        transform:translateX(100%);
-    }
-}
-
-.arabic-calligraphy{
-    position:relative;
-
-    font-size:1rem;
-    font-weight:700;
-    line-height:1;
-
-    background:
-        linear-gradient(
-            90deg,
-            #fff6a5,
-            #ffd700,
-            #fff6a5
-        );
-
-    background-size:200% auto;
-
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-
-    animation:
-        glitter 4s linear infinite;
-}
-
-@keyframes glitter{
-
-    0%{
-        background-position:0% center;
-    }
-
-    100%{
-        background-position:200% center;
-    }
-}
-@media (max-width:768px){
-
-    .islamic-banner{
-        height:28px;
-        padding:0 8px;
-    }
-
-    .arabic-calligraphy{
-        font-size:.72rem;
-        white-space:nowrap;
-    }
-}
-.islamic-banner{
-    height:26px;
-}
-
-/* Refined, responsive page styling */
-:root{
-    --primary:#12665e;
-    --secondary:#1b8c7d;
-    --bg:#f4f7f6;
-    --text:#172b2a;
-    --text-light:#60716f;
-    --shadow:0 12px 30px rgba(20,54,49,.08);
-}
-
-body{
-    background:var(--bg);
-    color:var(--text);
-    font-family:Inter,"Segoe UI",Arial,sans-serif;
-    line-height:1.5;
-}
-
-.islamic-banner{
-    height:auto;
-    min-height:54px;
-    padding:10px 20px;
-    background:linear-gradient(110deg,#103f3b,#12665e 55%,#1b8c7d);
-    border:0;
-}
-
-.islamic-banner::after{
-    content:none;
-}
-
-.arabic-calligraphy{
-    font-size:1.25rem;
-    line-height:1.5;
-    white-space:normal;
-    text-shadow:none;
-}
-
-.translation{
-    margin:0;
-    padding:0 20px 14px;
-    color:rgba(255,255,255,.82);
-    background:#103f3b;
-    text-align:center;
-    font-size:.82rem;
-    letter-spacing:.01em;
-}
-
-.translation p{
-    max-width:900px;
-    margin:0 auto;
-}
-
-.hero{
-    padding:24px 20px;
-    color:#fff;
-    background:linear-gradient(110deg,#103f3b,#12665e 58%,#1b8c7d);
-    border-top:1px solid rgba(255,255,255,.12);
-}
-
-.brand-header{
-    max-width:1160px;
-    margin:0 auto;
-    display:flex;
-    align-items:center;
-    justify-content:flex-start;
-    gap:20px;
-}
-
-.logo{
-    display:block;
-    width:76px;
-    height:76px;
-    flex:0 0 76px;
-    object-fit:contain;
-    padding:8px;
-    background:#fff;
-    border:1px solid rgba(255,255,255,.5);
-    border-radius:18px;
-    box-shadow:0 8px 22px rgba(0,0,0,.16);
-}
-
-.brand-text h1{
-    margin:0 0 3px;
-    font-size:clamp(1.65rem,3vw,2.25rem);
-    font-weight:700;
-    letter-spacing:-.035em;
-    line-height:1.2;
-}
-
-.brand-text p{
-    margin:0;
-    color:rgba(255,255,255,.82);
-    font-size:.95rem;
-}
-
-.container{
-    max-width:1200px;
-    padding:32px 24px;
-}
-
-.search-box{
-    max-width:680px;
-    margin:0 auto 20px;
-}
-
-.search-box input{
-    padding:14px 18px;
-    background:#fff;
-    border:1px solid #dce5e2;
-    border-radius:12px;
-    box-shadow:0 4px 14px rgba(20,54,49,.04);
-    color:var(--text);
-    outline:none;
-    transition:border-color .2s,box-shadow .2s;
-}
-
-.search-box input:focus{
-    border-color:var(--secondary);
-    box-shadow:0 0 0 4px rgba(27,140,125,.13);
-}
-
-.stats{
-    margin-bottom:22px;
-    color:var(--text-light);
-    font-size:.92rem;
-    font-weight:600;
-}
-
-.grid{
-    grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));
-    gap:20px;
-}
-
-.card{
-    display:flex;
-    flex-direction:column;
-    min-height:255px;
-    padding:22px;
-    border:1px solid #e5ece9;
-    border-top:3px solid var(--primary);
-    border-radius:16px;
-    box-shadow:var(--shadow);
-    transition:transform .2s ease,box-shadow .2s ease;
-}
-
-.card:hover{
-    transform:translateY(-4px);
-    box-shadow:0 18px 34px rgba(20,54,49,.13);
-}
-
-.tag{
-    align-self:flex-start;
-    margin-bottom:12px;
-    padding:5px 10px;
-    background:#e8f5f1;
-    color:#17695e;
-    font-weight:600;
-}
-
-.card h3{
-    margin-bottom:10px;
-    color:var(--text);
-    font-size:1.12rem;
-    line-height:1.4;
-}
-
-.card p{
-    flex:1;
-    min-height:0;
-    margin-bottom:4px;
-    color:var(--text-light);
-    font-size:.94rem;
-}
-
-.btn{
-    align-self:flex-start;
-    margin-top:18px;
-    padding:10px 16px;
-    border-radius:9px;
-    background:var(--primary);
-    transition:background .2s ease,transform .2s ease;
-}
-
-.btn:hover{
-    background:#0d514b;
-    transform:translateY(-1px);
-}
-
-footer{
-    margin-top:12px;
-    padding:28px 20px;
-    border-top:1px solid #e0e8e5;
-    background:#fff;
-    color:var(--text-light);
-    font-size:.9rem;
-}
-
-footer strong{
-    color:var(--text);
-}
-
-@media (max-width:600px){
-    .islamic-banner{
-        min-height:48px;
-        padding:8px 14px;
-    }
-
-    .arabic-calligraphy{
-        font-size:1rem;
-    }
-
-    .translation{
-        padding:0 16px 12px;
-        font-size:.74rem;
-    }
-
-    .hero{
-        padding:20px 18px;
-    }
-
-    .brand-header{
-        gap:14px;
-    }
-
-    .logo{
-        width:62px;
-        height:62px;
-        flex-basis:62px;
-        padding:6px;
-        border-radius:14px;
-    }
-
-    .brand-text h1{
-        font-size:1.5rem;
-    }
-
-    .brand-text p{
-        font-size:.8rem;
-    }
-
-    .container{
-        padding:24px 16px;
-    }
-
-    .card{
-        min-height:0;
-        padding:19px;
-    }
-
-    .btn{
-        align-self:stretch;
-        text-align:center;
-    }
-}
-
-@media (prefers-reduced-motion:reduce){
-    *,*::before,*::after{
-        scroll-behavior:auto !important;
-        animation-duration:.01ms !important;
-        animation-iteration-count:1 !important;
-        transition-duration:.01ms !important;
-    }
-}
-
+:root{--bg:#0b1220;--card:#121a2b;--card2:#18233a;--text:#eaf0ff;--muted:#9fb0cc;--brand:#4f8cff;--brand2:#22d3ee;--line:#26334d;--ok:#34d399;--warn:#fbbf24;--danger:#fb7185}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{margin:0;background:radial-gradient(120% 80% at 10% 0,#152341 0%,var(--bg) 60%);color:var(--text);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;display:flex;flex-direction:column}
+header{position:sticky;top:0;z-index:5;background:rgba(11,18,32,.88);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:calc(env(safe-area-inset-top) + 14px) 18px 14px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:750;font-size:19px}
+.logo-img{width:100px;height:125px;border-radius:11px;object-fit:cover;border:8px solid var(--line);box-shadow:0 2px 8px rgba(0,0,0,0.3)}
+.sub{color:var(--muted);font-size:13px;margin-top:2px}
+main{flex:1;width:min(780px,100%);margin:0 auto;padding:18px 16px calc(env(safe-area-inset-bottom) + 28px)}
+.card{background:linear-gradient(180deg,var(--card),var(--card2));border:1px solid var(--line);border-radius:20px;padding:16px;box-shadow:0 18px 50px rgba(0,0,0,.28);margin-bottom:16px}
+.drop{border:2px dashed #3b4d75;border-radius:16px;padding:22px 16px;text-align:center;transition:.2s;background:rgba(255,255,255,.03)}
+.drop.drag{border-color:var(--brand);background:rgba(79,140,255,.12)}
+.drop strong{display:block;font-size:17px;margin-bottom:4px}
+.drop span{color:var(--muted);font-size:13px}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+button,.file-label{appearance:none;border:0;border-radius:14px;padding:14px 16px;font-size:15px;font-weight:650;cursor:pointer;transition:transform .12s;text-align:center}
+button:active,.file-label:active{transform:scale(.98)}
+.primary{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#04121f}
+.ghost{background:#22304d;color:var(--text)}
+.danger{background:#3b2330;color:#ffb4c1}
+button:disabled,.file-label.disabled{opacity:.5;cursor:not-allowed}
+input[type=file],select{width:100%;padding:12px;border-radius:12px;border:1px solid var(--line);background:#0a0f1a;color:var(--text);font-size:15px}
+input[type=file]{display:none}
+.preview-wrap{margin-top:16px;display:none}
+.preview{width:100%;max-height:38vh;object-fit:contain;border-radius:14px;background:#0a0f1a;border:1px solid var(--line)}
+.status{margin-top:14px;display:none;align-items:center;gap:10px;color:var(--muted);font-size:14px}
+.spinner{width:18px;height:18px;border-radius:50%;border:2px solid #3b4d75;border-top-color:var(--brand);animation:spin .8s linear infinite;flex:0 0 auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+.bar{height:7px;border-radius:99px;background:#22304d;overflow:hidden;margin-top:8px}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--brand),var(--brand2));transition:width .25s}
+.result-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:0 0 10px}
+.result-head h2{font-size:16px;margin:0}
+textarea{width:100%;min-height:26vh;resize:vertical;border-radius:14px;border:1px solid var(--line);background:#0a0f1a;color:var(--text);padding:14px;font:17px/1.65 system-ui,sans-serif}
+textarea.rtl{direction:rtl;text-align:right;font-size:19px}
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 20px);transform:translate(-50%,140%);background:#1d2942;border:1px solid var(--line);color:var(--text);padding:12px 16px;border-radius:14px;font-size:14px;max-width:90vw;transition:transform .3s;z-index:20}
+.toast.show{transform:translate(-50%,0)}
+.empty{text-align:center;color:var(--muted);padding:24px 0}
+.error{margin-top:12px;display:none;background:#3b2330;border:1px solid #7f3b4d;color:#ffd7de;border-radius:12px;padding:12px;font-size:13px;word-break:break-word}
+.note{color:var(--muted);font-size:13px;margin-top:10px}
+.hidden{display:none!important}
+footer{text-align:center;color:#7487a6;font-size:12px;padding:0 16px 18px}
 </style>
 </head>
 <body>
-<div class="islamic-banner">
-    <span class="arabic-calligraphy">
-        ﷽ أعوذ بالله من الشيطان الرجيم ۝ بسم الله الرحمن الرحيم
-    </span>
-</div>
-<div class="translation">
-    <p>I seek refuge in Allah from Satan, the accursed. In the name of Allah,
-    the Most Compassionate, the Most Merciful.</p>
-</div>
-<header class="hero">
-    <div class="brand-header">
-        <img src="U1V1-Logo-Final.png" alt="U1V1 Logo" class="logo">
-        <div class="brand-text">
-            <h1>U1V1 Digital Hub</h1>
-            <p>Applications • Utilities • AI Solutions • Islamic Tools</p>
-        </div>
-    </div>
+<header>
+ <div class="brand">
+  <img src="u1v1_logo.png" alt="U1V1 Logo" class="logo-img">
+  <div>Image to Text & Translate<div class="sub">OCR in your browser · Translation needs internet - By Habib</div></div>
+ </div>
 </header>
-    
+<main>
+ <section class="card">
+  <div class="drop" id="drop">
+   <strong>Add an image</strong>
+   <span>Take a photo, choose from gallery, or drag &amp; drop</span>
+  </div>
+  
+  <input type="file" id="file" accept="image/*">
+  <input type="file" id="cameraFile" accept="image/*" capture="environment">
 
-<div class="container">
+  
+  <div class="actions">
+     <label class="file-label ghost" for="cameraFile">📸 Take camera picture</label>
+        <label class="file-label primary" for="file">📷 Choose / Capture</label>
 
-    <div class="search-box">
-        <input type="text" id="searchBox"
-               placeholder="Search applications...">
-    </div>
+   <button class="ghost" id="pasteBtn">📋 Paste image</button>
+  </div>
+  <label style="display:block;margin-top:14px">Image language
+   <select id="lang">
+    <option value="eng">English</option>
+    <option value="ara">Arabic</option>
+    <option value="hin">Hindi</option>
+    <option value="tel">Telugu</option>
+    <option value="urd">Urdu</option>
+   </select>
+  </label>
+  <label style="display:block;margin-top:12px">Also recognize English
+   <select id="withEnglish">
+    <option value="no">No</option>
+    <option value="yes">Yes — for mixed Arabic/English text</option>
+   </select>
+  </label>
+  <label style="display:block;margin-top:12px">Recognition mode
+   <select id="mode">
+    <option value="text">Normal text</option>
+    <option value="numbers">Numbers, currency and punctuation</option>
+   </select>
+  </label>
+  <div class="note">For Arabic, choose <b>Arabic</b> as the image language. Use good lighting, keep the page straight, and avoid glare. The first Arabic OCR use downloads the Arabic model.</div>
+  <div class="preview-wrap" id="previewWrap">
+   <img id="preview" class="preview" alt="Selected image preview">
+   <div class="actions">
+    <button class="primary" id="extractBtn">Extract text</button>
+    <button class="danger" id="clearBtn">Clear</button>
+   </div>
+  </div>
+  <div class="status" id="status"><div class="spinner"></div><div><span id="statusText">Preparing…</span><div class="bar"><i id="bar"></i></div></div></div>
+  <div class="error" id="error"></div>
+ </section>
 
-    <div class="stats">
-        12 Applications Available
-    </div>
+ <section class="card hidden" id="ocrCard">
+  <div class="result-head"><h2>Extracted text</h2><button class="ghost" id="copyOcr">Copy</button></div>
+  <textarea id="ocrText" placeholder="Recognized text will appear here…" spellcheck="false"></textarea>
+  <div class="actions"><button class="ghost" id="downloadBtn">⬇️ Download .txt</button><button class="ghost" id="shareBtn">🔗 Share</button></div>
+ </section>
 
-    <div class="grid" id="appContainer">
+ <section class="card hidden" id="translateCard">
+  <div class="result-head"><h2>Translate</h2><button class="ghost" id="copyTranslation">Copy</button></div>
+  <div class="actions">
+   <label>Translate from<select id="fromLang">
+    <option value="auto">Detect automatically</option>
+    <option value="ar">Arabic</option>
+    <option value="en">English</option>
+    <option value="hi">Hindi</option>
+    <option value="te">Telugu</option>
+    <option value="ur">Urdu</option>
+   </select></label>
+   <label>Translate to<select id="toLang">
+    <option value="en">English</option>
+    <option value="hi">Hindi</option>
+    <option value="te">Telugu</option>
+    <option value="ar">Arabic</option>
+    <option value="ur">Urdu</option>
+   </select></label>
+  </div>
+  <div class="actions"><button class="primary" id="translateBtn">Translate text</button><button class="ghost" id="swapLang">⇄ Swap languages</button></div>
+  <div class="status" id="tStatus"><div class="spinner"></div><span id="tStatusText">Translating…</span></div>
+  <div class="error" id="tError"></div>
+  <textarea id="translation" class="hidden" placeholder="Translation will appear here…" spellcheck="false"></textarea>
+  <div class="note">Translation sends only the extracted text to a public translation service, so it requires internet access.</div>
+ </section>
 
-        <div class="card">
-            <span class="tag">Health</span>
-            <h3>💊 Medicine Reminder</h3>
-            <p>Track medicines, schedules and reminders to help maintain daily medication adherence.</p>
-            <a class="btn" href="https://u1v1-fs.github.io/dawai/" target="_blank">Open App</a>
-        </div>
-
-        <div class="card">
-            <span class="tag">Islamic</span>
-            <h3>🕌 Masjid Prayer Display</h3>
-            <p>Prayer timetable display solution designed for Masjids with clear daily Salah timings.</p>
-            <a class="btn" href="https://u1v1-fs.github.io/Salah/" target="_blank">Open App</a>
-        </div>
-
-        <div class="card">
-            <span class="tag">Islamic</span>
-            <h3>📖 Itminān for U1V1</h3>
-            <p>Muslim Dua & Surah Companion providing daily duas, surahs and essential Islamic resources.</p>
-            <a class="btn" href="https://u1v1-fs.github.io/itminan-app/" target="_blank">Open App</a>
-        </div>
-
-        <div class="card">
-            <span class="tag">Developer Tool</span>
-            <h3>🧹 Linewise – Code Duplicate Finder</h3>
-            <p>Analyze source code and identify duplicate lines and repeated code patterns.</p>
-            <a class="btn" href="https://u1v1-fs.github.io/Code-Cleaner/" target="_blank">Open App</a>
-        </div>
-
-        <div class="card">
-            <span class="tag">Developer Tool</span>
-            <h3>📁 FaHaM – CompFile</h3>
-            <p>Compare files efficiently and identify differences across documents and source files.</p>
-            <a class="btn" href="https://u1v1-fs.github.io/CompFile/" target="_blank">Open App</a>
-        </div>
-
-        <div class="card">
-            <span class="tag">Operations</span>
-            <h3>🚀 TASallIE Solution</h3>
-            <p>Operational and productivity toolkit built to simplify business and technical workflows.</p>
-            <a class="btn" href="https://u1v1-fs.github.io/TASallIE/" target="_blank">Open App</a>
-        </div>
-
-        <div class="card">
-            <span class="tag">Utility</span>
-            <h3>⚙️ SGW</h3>
-            <p>Specialized workflow utility supporting operational management and productivity.</p>
-            <a class="btn" href="https://u1v1-fs.github.io/SGW/" target="_blank">Open App</a>
-        </div>
-
-        <div class="card">
-            <span class="tag">Business</span>
-            <h3>📊 BHaGA</h3>
-            <p>Business assistance platform focused on organization, tracking and productivity.</p>
-            <a class="btn" href="https://u1v1-fs.github.io/BHaGA/" target="_blank">Open App</a>
-        </div>
-
-        <div class="card">
-            <span class="tag">AI</span>
-            <h3>🤖 AI-DM</h3>
-            <p>AI-powered assistant supporting decision making, productivity and smart workflows.</p>
-            <a class="btn" href="https://u1v1-fs.github.io/AI-DM/" target="_blank">Open App</a>
-        </div>
-
-        <div class="card">
-            <span class="tag">Lifestyle</span>
-            <h3>🌍 One Day All Around</h3>
-            <p>Plan, organize and manage day-based activities through a simple and practical interface.</p>
-            <a class="btn" href="https://u1v1-fs.github.io/OneDayAllAround/" target="_blank">Open App</a>
-        </div>
-
-        <div class="card">
-            <span class="tag">Workflow</span>
-            <h3>📝 RWS</h3>
-            <p>Resource and workflow management solution designed to support operational efficiency.</p>
-            <a class="btn" href="https://u1v1-fs.github.io/RWS/" target="_blank">Open App</a>
-        </div>
-
-        <div class="card">
-            <span class="tag">OCR</span>
-            <h3>🖼️ Img2Text</h3>
-            <p>Extract editable text from image files using optical character recognition technology.</p>
-            <a class="btn" href="https://u1v1-fs.github.io/Img2text/" target="_blank">Open App</a>
-        </div>
-
-    </div>
-
-</div>
-
-<footer>
-    <strong>U1V1 Digital Hub</strong><br>
-    Unite One We Won<br><br>
-    Designed & Maintained by Mohammed Habibur Rahiman
-</footer>
-
+ <div class="empty" id="empty">Your image is processed on this device. Translation requires internet.</div>
+</main>
+<footer>OCR by Tesseract.js. Translation uses a public translation API.</footer>
+<div class="toast" id="toast"></div>
 <script>
-const searchBox = document.getElementById("searchBox");
-
-searchBox.addEventListener("keyup", () => {
-    const filter = searchBox.value.toLowerCase();
-    const cards = document.querySelectorAll(".card");
-
-    cards.forEach(card => {
-        const content = card.textContent.toLowerCase();
-        card.style.display =
-            content.includes(filter) ? "block" : "none";
-    });
+const $=id=>document.getElementById(id);
+const fileInput=$('file'),drop=$('drop'),previewWrap=$('previewWrap'),preview=$('preview'),extractBtn=$('extractBtn'),clearBtn=$('clearBtn'),status=$('status'),statusText=$('statusText'),bar=$('bar'),ocrCard=$('ocrCard'),ocrText=$('ocrText'),toast=$('toast'),empty=$('empty'),errorBox=$('error'),translateCard=$('translateCard'),translation=$('translation'),tStatus=$('tStatus'),tStatusText=$('tStatusText'),tError=$('tError');
+let currentFile=null,worker=null,workerKey='',busy=false;
+const rtl=new Set(['ara','urd']);
+function showToast(msg){toast.textContent=msg;toast.classList.add('show');clearTimeout(showToast.t);showToast.t=setTimeout(()=>toast.classList.remove('show'),3200);}
+function showError(box,msg){box.textContent=msg;box.style.display='block';}
+function clearError(box){box.textContent='';box.style.display='none';}
+function reset(){currentFile=null;preview.removeAttribute('src');previewWrap.style.display='none';ocrCard.classList.add('hidden');translateCard.classList.add('hidden');empty.classList.remove('hidden');ocrText.value='';translation.value='';fileInput.value='';clearError(errorBox);clearError(tError);}
+function setStatus(text,pct){status.style.display='flex';statusText.textContent=text;if(typeof pct==='number')bar.style.width=Math.max(2,Math.min(100,pct))+'%';}
+function hideStatus(){status.style.display='none';bar.style.width='0';}
+function loadImage(file){
+ clearError(errorBox);
+ if(!file)return;
+ if(!file.type||!file.type.startsWith('image/')){showToast('Please choose an image file.');return;}
+ if(file.size>30*1024*1024){showToast('Image is too large. Please use an image under 30 MB.');return;}
+ currentFile=file;const url=URL.createObjectURL(file);preview.src=url;preview.onload=()=>URL.revokeObjectURL(url);previewWrap.style.display='block';ocrCard.classList.add('hidden');translateCard.classList.add('hidden');empty.classList.add('hidden');
+}
+fileInput.addEventListener('change',e=>loadImage(e.target.files&&e.target.files[0]));
+['dragenter','dragover'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('drag');}));
+['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('drag');}));
+drop.addEventListener('drop',e=>loadImage(e.dataTransfer.files&&e.dataTransfer.files[0]));
+$('pasteBtn').addEventListener('click',async()=>{try{const items=await navigator.clipboard.read();for(const item of items){const type=item.types.find(t=>t.startsWith('image/'));if(type){const blob=await item.getType(type);loadImage(new File([blob],'pasted-image.'+(type.split('/')[1]||'png'),{type}));return;}}showToast('No image found in clipboard.');}catch(e){showToast('Clipboard image access was blocked.');}});
+function preprocess(img){
+ const maxSide=2600,minSide=1100;let w=img.naturalWidth,h=img.naturalHeight;
+ if(!w||!h)throw new Error('Could not read image dimensions.');
+ let scale=Math.min(1,maxSide/Math.max(w,h));
+ if(Math.max(w,h)*scale<minSide)scale=minSide/Math.max(w,h);
+ const cw=Math.round(w*scale),ch=Math.round(h*scale);
+ const canvas=document.createElement('canvas');canvas.width=cw;canvas.height=ch;
+ const ctx=canvas.getContext('2d',{willReadFrequently:true});
+ ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
+ ctx.fillStyle='#fff';ctx.fillRect(0,0,cw,ch);ctx.drawImage(img,0,0,cw,ch);
+ const data=ctx.getImageData(0,0,cw,ch),d=data.data;
+ let sum=0;for(let i=0;i<d.length;i+=4)sum+=d[i]*.299+d[i+1]*.587+d[i+2]*.114;
+ const mean=sum/(d.length/4),contrast=mean<110?1.55:mean>190?1.22:1.32;
+ for(let i=0;i<d.length;i+=4){let g=d[i]*.299+d[i+1]*.587+d[i+2]*.114;g=Math.max(0,Math.min(255,(g-mean)*contrast+mean));d[i]=d[i+1]=d[i+2]=g;}
+ ctx.putImageData(data,0,0);return canvas;
+}
+function languageList(){
+ const primary=$('lang').value,withEnglish=$('withEnglish').value==='yes';
+ return withEnglish&&primary!=='eng'?[primary,'eng']:[primary];
+}
+async function getWorker(langs,mode){
+ const key=langs.join('+')+'|'+mode;
+ if(worker&&workerKey===key)return worker;
+ if(worker){try{await worker.terminate();}catch(e){}worker=null;workerKey='';}
+ setStatus('Loading OCR engine…',3);
+ worker=await Tesseract.createWorker(langs,1,{logger:m=>{
+  if(m.status==='recognizing text')setStatus('Reading text…',m.progress*100);
+  else if(/loading|download/i.test(m.status||''))setStatus('Downloading '+langs.join('+')+' model…',Math.max(8,(m.progress||0)*100));
+  else if(m.status)setStatus(m.status.replace(/^\w/,c=>c.toUpperCase())+'…',Math.max(5,(m.progress||0)*100));
+ }});
+ const params={preserve_interword_spaces:'1'};
+ if(mode==='numbers')params.tessedit_char_whitelist='0123456789.,:-+/₹$% ';
+ await worker.setParameters(params);
+ workerKey=key;return worker;
+}
+extractBtn.addEventListener('click',async()=>{
+ if(!currentFile||busy)return;
+ busy=true;extractBtn.disabled=true;clearError(errorBox);ocrText.value='';ocrCard.classList.add('hidden');translateCard.classList.add('hidden');
+ try{
+  if(typeof Tesseract==='undefined'||!Tesseract.createWorker)throw new Error('OCR library did not load. Connect to the internet and reload this page.');
+  const langs=languageList(),mode=$('mode').value;
+  setStatus('Preparing image…',2);
+  const image=await new Promise((resolve,reject)=>{if(preview.complete&&preview.naturalWidth)resolve(preprocess(preview));else{preview.onload=()=>resolve(preprocess(preview));preview.onerror=()=>reject(new Error('Could not read the selected image.'));}});
+  const activeWorker=await getWorker(langs,mode);
+  setStatus('Reading text…',8);
+  const {data}=await activeWorker.recognize(image);
+  const text=((data&&data.text)||'').replace(/[ \t]+\n/g,'\n').replace(/\n{3,}/g,'\n\n').trim();
+  ocrText.value=text;ocrText.classList.toggle('rtl',langs.includes('ara')||langs.includes('urd'));
+  ocrCard.classList.remove('hidden');
+  if(text.trim()){
+   translateCard.classList.remove('hidden');
+   const primary=$('lang').value;const map={ara:'ar',eng:'en',hin:'hi',tel:'te',urd:'ur'};$('fromLang').value=map[primary]||'auto';
+   showToast('Text extracted in '+langs.join(' + ')+'.');
+  }else showToast('No readable text found. Try a closer, sharper, well-lit image.');
+ }catch(err){
+  console.error('OCR error:',err);
+  showError(errorBox,'Arabic/OCR could not complete: '+(err&&err.message?err.message:'Unknown error')+'. Ensure internet is available for the first Arabic model download, select Arabic as image language, and use a sharp straight photo.');
+  showToast('OCR failed.');
+ }finally{busy=false;extractBtn.disabled=false;hideStatus();}
 });
+clearBtn.addEventListener('click',reset);
+$('copyOcr').addEventListener('click',async()=>{if(!ocrText.value)return showToast('Nothing to copy.');try{await navigator.clipboard.writeText(ocrText.value);showToast('Copied.');}catch(e){ocrText.select();document.execCommand('copy');showToast('Copied.');}});
+$('downloadBtn').addEventListener('click',()=>{if(!ocrText.value)return showToast('Nothing to download.');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([ocrText.value],{type:'text/plain;charset=utf-8'}));a.download='extracted-text.txt';a.click();URL.revokeObjectURL(a.href);});
+$('shareBtn').addEventListener('click',async()=>{if(!ocrText.value)return showToast('Nothing to share.');if(navigator.share){try{await navigator.share({title:'Extracted text',text:ocrText.value});}catch(e){}}else{await navigator.clipboard.writeText(ocrText.value);showToast('Sharing unavailable; text copied.');}});
+$('swapLang').addEventListener('click',()=>{const a=$('fromLang'),b=$('toLang');if(a.value==='auto'){showToast('Select a source language before swapping.');return;}const temp=a.value;a.value=b.value;b.value=temp;});
+$('translateBtn').addEventListener('click',async()=>{
+ const text=ocrText.value.trim();
+ if(!text)return showToast('Extract text first.');
+ clearError(tError);translation.value='';tStatus.style.display='flex';tStatusText.textContent='Translating…';
+ try{
+  const from=$('fromLang').value,to=$('toLang').value;
+  const chunks=[];let current='';
+  for(const para of text.split(/\n{2,}/)){
+   if((current+'\n\n'+para).length>4500){if(current)chunks.push(current);current=para;}else current=current?current+'\n\n'+para:para;
+  }
+  if(current)chunks.push(current);
+  let final='';
+  for(const chunk of chunks){
+   const url='https://api.mymemory.translated.net/get?q='+encodeURIComponent(chunk)+'&langpair='+encodeURIComponent(from+'|'+to);
+   const res=await fetch(url);
+   if(!res.ok)throw new Error('Translation service returned '+res.status+'.');
+   const json=await res.json();
+   const translated=json&&json.responseData&&json.responseData.translatedText;
+   if(!translated)throw new Error(json&&json.responseDetails?json.responseDetails:'No translation returned.');
+   final+=(final?'\n\n':'')+translated;
+  }
+  translation.value=final;translation.classList.remove('hidden');
+  translation.classList.toggle('rtl',to==='ar'||to==='ur');
+  showToast('Translation complete.');
+ }catch(err){
+  console.error(err);translation.classList.add('hidden');
+  showError(tError,'Translation failed: '+(err&&err.message?err.message:'Unknown error')+'. Check internet access and try again. The free public service has daily limits.');
+  showToast('Translation failed.');
+ }finally{tStatus.style.display='none';}
+});
+$('copyTranslation').addEventListener('click',async()=>{if(!translation.value)return showToast('Nothing to copy.');try{await navigator.clipboard.writeText(translation.value);showToast('Translation copied.');}catch(e){translation.select();document.execCommand('copy');showToast('Translation copied.');}});
 </script>
-
 </body>
 </html>
